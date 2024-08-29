@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-    <name>nmea_navsat_driver</name>
+    <name>nturt_nmea_navsat_driver</name>
     <version>2.0.0</version>
     <description>
         Package to parse NMEA strings and publish a very simple GPS message. Does not
-        require or use the GPSD deamon.
+        require or use the GPSD deamon. NTRIP feature is added by CHYang25 afterwards.
     </description>
 
     <maintainer email="evenator@gmail.com">Ed Venator</maintainer>
+    <maintainer email="chris920325@gmail.com">CHYang25</maintainer>
 
     <license>BSD</license>
 
@@ -16,6 +17,7 @@
 
     <author email="eric@ericperko.com">Eric Perko</author>
     <author>Steven Martin</author>
+    <author email="chris920325@gmail.com">CHYang25</author>
 
     <exec_depend>geometry_msgs</exec_depend>
     <exec_depend>nmea_msgs</exec_depend>

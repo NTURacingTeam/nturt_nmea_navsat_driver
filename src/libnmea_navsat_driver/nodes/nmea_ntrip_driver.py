@@ -30,20 +30,59 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+import serial
 
-# Check the NMEA sentence checksum. Return True if passes and False if failed
-def check_nmea_checksum(nmea_sentence):
-    nmea_sentence = str(nmea_sentence)
-    split_sentence = nmea_sentence.split('*')
-    if len(split_sentence) != 2:
-        # No checksum bytes were found... improperly formatted/incomplete NMEA data?
-        return False
-    transmitted_checksum = split_sentence[1].strip()
+import rclpy
 
-    # Remove the $ at the front
-    data_to_checksum = split_sentence[0][1:]
-    checksum = 0
-    for c in data_to_checksum:
-        checksum ^= ord(c)
+from libnmea_navsat_driver.driver import Ros2NMEADriver, NtripClient
 
-    return ("%02X" % checksum) == transmitted_checksum.upper()
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    ntripArgs = {}
+    ntripArgs['lat'] = 0.0
+    ntripArgs['lon'] = 0.0
+    ntripArgs['height'] = 0.0
+    ntripArgs['host'] = False
+    ntripArgs['ssl'] = False
+
+    ntripArgs['user']="chris920325@gmail.com"+":"+"nturt2023"
+    ntripArgs['caster']="3.143.243.81"
+    ntripArgs['port']=2101
+    ntripArgs['mountpoint']="Navi-test"
+
+    if ntripArgs['mountpoint'][0:1] !="/":
+        ntripArgs['mountpoint'] = "/"+ntripArgs['mountpoint']
+
+    ntripArgs['V2']=False
+
+    ntripArgs['verbose']=True
+    ntripArgs['headerOutput']=False
+
+    maxReconnect=1
+    maxConnectTime=None
+    
+    if ntripArgs['verbose']:
+        print ("Server: " + ntripArgs['caster'])
+        print ("Port: " + str(ntripArgs['port']))
+        print ("User: " + ntripArgs['user'])
+        print ("mountpoint: " +ntripArgs['mountpoint'])
+        print ("Reconnects: " + str(maxReconnect))
+        print ("Max Connect Time: " + str (maxConnectTime))
+        if ntripArgs['V2']:
+            print ("NTRIP: V2")
+        else:
+            print ("NTRIP: V1")
+
+        if ntripArgs["ssl"]:
+            print ("SSL Connection")
+        else:
+            print ("Uncrypted Connection")
+        print ("")
+
+    ntrip_client = NtripClient(**ntripArgs)
+    # try:
+    ntrip_client.readData()
+    # except Exception:
+    #     ntrip_client.driver.get_logger().error("Exit with error!!")

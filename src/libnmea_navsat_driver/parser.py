@@ -146,10 +146,11 @@ parse_maps = {
 def parse_nmea_sentence(nmea_sentence):
     # Check for a valid nmea sentence
 
-    if not re.match(r'(^\$GP|^\$GN|^\$GL|^\$IN).*\*[0-9A-Fa-f]{2}$', nmea_sentence):
-        logger.debug("Regex didn't match, sentence not valid NMEA? Sentence was: %s"
-                     % repr(nmea_sentence))
-        return False
+    # Not sure whether I should close this or not
+    # if not re.match(r'(^\$GP|^\$GN|^\$GL|^\$IN).*\*[0-9A-Fa-f]{2}$', nmea_sentence):
+    #     logger.debug("Regex didn't match, sentence not valid NMEA? Sentence was: %s"
+    #                  % repr(nmea_sentence))
+    #     return False
     fields = [field.strip(',') for field in nmea_sentence.split(',')]
 
     # Ignore the $ and talker ID portions (e.g. GP)

@@ -2,7 +2,7 @@ from glob import glob
 import os
 from setuptools import setup
 
-PACKAGE_NAME = "nmea_navsat_driver"
+PACKAGE_NAME = "nturt_nmea_navsat_driver"
 SHARE_DIR = os.path.join("share", PACKAGE_NAME)
 
 setup(
@@ -22,13 +22,14 @@ setup(
                       'pyserial',
                       'numpy',
                       'pyyaml'],
-    author='Eric Perko',
-    maintainer='Ed Venator',
+    author='Eric Perko, CHYang25',
+    maintainer='Ed Venator, CHYang25',
     keywords=['ROS2'],
-    description='Package to parse NMEA strings and publish a very simple GPS message.',
+    description='Package to parse NMEA strings and publish a very simple GPS message. NTRIP feature is added by CHYang25 afterwards.',
     license='BSD',
     entry_points={
-        'console_scripts': ['nmea_serial_driver = libnmea_navsat_driver.nodes.nmea_serial_driver:main',
+        'console_scripts': ['nmea_ntrip_driver = libnmea_navsat_driver.nodes.nmea_ntrip_driver:main',
+                            'nmea_serial_driver = libnmea_navsat_driver.nodes.nmea_serial_driver:main',
                             'nmea_socket_driver = libnmea_navsat_driver.nodes.nmea_socket_driver:main',
                             'nmea_tcpclient_driver = libnmea_navsat_driver.nodes.nmea_tcpclient_driver:main',
                             'nmea_topic_driver = libnmea_navsat_driver.nodes.nmea_topic_driver:main',

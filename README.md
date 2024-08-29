@@ -4,6 +4,8 @@ Please refer to the link https://www.waveshare.net/wiki/LC29H(XX)_GPS/RTK_HAT fo
 
 lc29h_gps_rtk_hat_code: the directory for ntrip rtcm message receiving, from rtk2go.com registered server
 
+``./lc29h_gps_rtk_hat_code`` is reference code directory for NTRIP feature. It's not part of the execution.
+
 ### progress
 #### rtkRover
 Not done:
@@ -18,6 +20,7 @@ nturt - username
 nturt2023 - password
 3.143.243.81 - rtk2go server IP address
 2101 - rtk2go server port
+T430_32 - mountpoint
 ```
 
 Not done:

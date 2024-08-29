@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" A simple launch file for the nmea_serial_driver node. """
+""" A simple launch file for the nturt_nmea_serial_driver node. """
+# by CHYang25 
 
 import os
 import sys
@@ -24,10 +25,10 @@ from launch_ros import actions
 
 def generate_launch_description():
     """Generate a launch description for a single serial driver."""
-    config_file = os.path.join(get_package_share_directory("nturt_nmea_navsat_driver"), "config", "nmea_serial_driver.yaml")
+    config_file = os.path.join(get_package_share_directory("nturt_nmea_navsat_driver"), "config", "nmea_ntrip_driver.yaml")
     driver_node = actions.Node(
         package='nturt_nmea_navsat_driver',
-        executable='nmea_serial_driver',
+        executable='nmea_ntrip_driver',
         output='screen',
         parameters=[config_file])
 

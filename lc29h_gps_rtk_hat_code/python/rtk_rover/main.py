@@ -76,7 +76,7 @@ class NtripClient(object):
         self.headerOutput=headerOutput
         self.maxConnectTime=maxConnectTime
         self.socket=None
-        self.stream = serial.Serial('/dev/ttyACM0', 115200, timeout=3)
+        self.stream = serial.Serial('/dev/ttyUSB0', 115200, timeout=3)
         self.nmr = NMEAReader(self.stream)
         
 

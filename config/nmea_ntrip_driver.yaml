@@ -1,0 +1,13 @@
+nmea_navsat_driver:
+  ros__parameters:
+    port: "/dev/tty.usbserial"
+    baud: 115200
+    frame_id: "gps"
+    time_ref_source: "gps"
+    useRMC: False
+  ntrip_parameters:
+    user: "chris920325@gmail.com"
+    password: "nturt2023"
+    caster_IP: "3.143.243.81"
+    caster_port: "2101"
+    mountpoint: "Navi-test"
