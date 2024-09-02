@@ -447,7 +447,11 @@ class NtripClient(object):
                     while not found_header:
                         casterResponse=self.socket.recv(4096) #All the data
                         # print(casterResponse)
-                        header_lines = casterResponse.decode('utf-8').split("\r\n")
+                        try:
+                            header_lines = casterResponse.decode('utf-8').split("\r\n")
+                        except UnicodeDecodeError:
+                            self.driver.get_logger().debug("header not found yet, error occured, retrying....")
+                            continue
                         
 # header_lines empty, request fail,exit while loop
                         for line in header_lines:
