@@ -458,7 +458,7 @@ class NtripClient(object):
                             self.stream.write(data)
                             (raw_data, parsed_data) = self.nmr.read()
                             if bytes("GNGGA",'ascii') in raw_data :
-                                self.driver.get_logger().info(raw_data.decode('utf-8'))
+                                self.driver.get_logger().debug(raw_data.decode('utf-8'))
                                 self.driver.add_sentence(raw_data.decode('utf-8'), self.frame_id)
 
 #                            print datetime.datetime.now()-connectTime
