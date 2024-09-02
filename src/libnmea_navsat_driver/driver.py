@@ -52,7 +52,7 @@ from libnmea_navsat_driver import parser
 
 
 class Ros2NMEADriver(Node):
-    def __init__(self, longtitude_range = 25, latitude_range = 121):
+    def __init__(self, longtitude_range = 121, latitude_range = 25):
         super().__init__('nturt_nmea_navsat_driver')
 
         self.fix_pub = self.create_publisher(NavSatFix, 'fix', 10)
@@ -162,7 +162,7 @@ class Ros2NMEADriver(Node):
         else:
             current_time_ref.source = frame_id
 
-        if not self.use_RMC and 'GGA' in parsed_sentence:
+        if 'GGA' in parsed_sentence:
             current_fix.position_covariance_type = NavSatFix.COVARIANCE_TYPE_APPROXIMATED
 
             data = parsed_sentence['GGA']
@@ -498,9 +498,9 @@ class NtripClient(object):
                             # self.out.buffer.write(data)
                             self.stream.write(data)
                             (raw_data, parsed_data) = self.nmr.read()
-                            # if bytes("GNGGA",'ascii') in raw_data :
-                            self.driver.get_logger().debug(raw_data.decode('utf-8'))
-                            self.driver.add_sentence(raw_data.decode('utf-8'), self.frame_id)
+                            if bytes("GNGGA",'ascii') in raw_data or bytes("GNRMC", 'ascii') in raw_data:
+                                self.driver.get_logger().debug(raw_data.decode('utf-8'))
+                                self.driver.add_sentence(raw_data.decode('utf-8'), self.frame_id)
 
 #                            print datetime.datetime.now()-connectTime
                             if self.maxConnectTime :
