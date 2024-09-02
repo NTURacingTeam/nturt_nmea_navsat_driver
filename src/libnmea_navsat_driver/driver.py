@@ -52,7 +52,7 @@ from libnmea_navsat_driver import parser
 
 
 class Ros2NMEADriver(Node):
-    def __init__(self):
+    def __init__(self, longtitude_range = 25, latitude_range = 121):
         super().__init__('nturt_nmea_navsat_driver')
 
         self.fix_pub = self.create_publisher(NavSatFix, 'fix', 10)
@@ -61,7 +61,7 @@ class Ros2NMEADriver(Node):
         self.time_ref_pub = self.create_publisher(TimeReference, 'time_reference', 10)
 
         self.time_ref_source = self.declare_parameter('time_ref_source', 'gps').value
-        self.use_RMC = self.declare_parameter('useRMC', False).value
+        self.use_RMC = self.declare_parameter('useRMC', True).value
         self.valid_fix = False
 
         # epe = estimated position error
@@ -77,6 +77,12 @@ class Ros2NMEADriver(Node):
         self.lon_std_dev = float("nan")
         self.lat_std_dev = float("nan")
         self.alt_std_dev = float("nan")
+
+        self.long_range = longtitude_range
+        self.lat_range = latitude_range
+        self.last_long = 0
+        self.last_lat = 0
+        self.valid = False
 
         """Format for this dictionary is the fix type from a GGA message as the key, with
         each entry containing a tuple consisting of a default estimated
@@ -174,14 +180,30 @@ class Ros2NMEADriver(Node):
 
             current_fix.status.service = NavSatStatus.SERVICE_GPS
             latitude = data['latitude']
+            longitude = data['longitude']
+
             if data['latitude_direction'] == 'S':
                 latitude = -latitude
-            current_fix.latitude = latitude
-
-            longitude = data['longitude']
             if data['longitude_direction'] == 'W':
                 longitude = -longitude
+
+            if not self.valid and abs(latitude - self.lat_range) < 1 and abs(longitude - self.long_range) < 1:
+                self.last_lat = latitude
+                self.last_long = longitude
+                self.valid = True
+            
+            if not self.valid:
+                return
+
+            if abs(latitude - self.lat_range) > 1:
+                latitude = self.last_lat
+            current_fix.latitude = latitude
+            self.last_lat = latitude
+
+            if abs(longitude - self.long_range) > 1:
+                longitude = self.last_long
             current_fix.longitude = longitude
+            self.last_long = longitude
 
             # Altitude is above ellipsoid, so adjust for mean-sea-level
             altitude = data['altitude'] + data['mean_sea_level']
@@ -230,16 +252,31 @@ class Ros2NMEADriver(Node):
                     current_fix.status.status = NavSatStatus.STATUS_NO_FIX
 
                 current_fix.status.service = NavSatStatus.SERVICE_GPS
-
                 latitude = data['latitude']
+                longitude = data['longitude']
+
                 if data['latitude_direction'] == 'S':
                     latitude = -latitude
-                current_fix.latitude = latitude
-
-                longitude = data['longitude']
                 if data['longitude_direction'] == 'W':
                     longitude = -longitude
+
+                if not self.valid and abs(latitude - self.lat_range) < 1 and abs(longitude - self.long_range) < 1:
+                    self.last_lat = latitude
+                    self.last_long = longitude
+                    self.valid = True
+                
+                if not self.valid:
+                    return
+
+                if abs(latitude - self.lat_range) > 1:
+                    latitude = self.last_lat
+                current_fix.latitude = latitude
+                self.last_lat = latitude
+
+                if abs(longitude - self.long_range) > 1:
+                    longitude = self.last_long
                 current_fix.longitude = longitude
+                self.last_long = longitude
 
                 current_fix.altitude = float('NaN')
                 current_fix.position_covariance_type = \
@@ -457,9 +494,9 @@ class NtripClient(object):
                             # self.out.buffer.write(data)
                             self.stream.write(data)
                             (raw_data, parsed_data) = self.nmr.read()
-                            if bytes("GNGGA",'ascii') in raw_data :
-                                self.driver.get_logger().debug(raw_data.decode('utf-8'))
-                                self.driver.add_sentence(raw_data.decode('utf-8'), self.frame_id)
+                            # if bytes("GNGGA",'ascii') in raw_data :
+                            self.driver.get_logger().debug(raw_data.decode('utf-8'))
+                            self.driver.add_sentence(raw_data.decode('utf-8'), self.frame_id)
 
 #                            print datetime.datetime.now()-connectTime
                             if self.maxConnectTime :
