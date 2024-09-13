@@ -50,7 +50,8 @@ def main(args=None):
     ntripArgs['user']="chris920325@gmail.com"+":"+"nturt2023"
     ntripArgs['caster']="3.143.243.81"
     ntripArgs['port']=2101
-    ntripArgs['mountpoint']="Navi-test"
+    # ntripArgs['mountpoint']="Navi-test"
+    ntripArgs['mountpoint']="MIE_UNIV"
 
     if ntripArgs['mountpoint'][0:1] !="/":
         ntripArgs['mountpoint'] = "/"+ntripArgs['mountpoint']
